@@ -11,7 +11,7 @@ Box2DTCPHandler handler;
 Server s;
 Client c1;
 Client c2;
-String input;
+String input, msg;
 String commands[];
 float data[];
 
@@ -77,7 +77,7 @@ void setup()
 void draw() 
 {
   if(!paused || frame_request){
-    println(int(frameRate));
+    //println(int(frameRate));
     handler.request_world_state();
     //Draw state
     background(background_color);
@@ -125,11 +125,12 @@ void draw()
     }
     
     //Broadcast
-    s.write("s "+ nf(ballVision.centroidG.x,0,2) + " " + nf(ballVision.centroidG.y,0,2) + " ");
+    msg = "s "+ nf(ballVision.centroidG.x,0,2) + " " + nf(ballVision.centroidG.y,0,2) + " ";
     for(int i = 0; i < robotsVision.length; ++i){
-      s.write(nf(robotsVision[i].centroidG.x,0,2) + " " +  nf(robotsVision[i].centroidG.y,0,2) + " " + nf(robotsVision[i].angle,0,2) + " ");
+      msg += nf(robotsVision[i].centroidG.x,0,2) + " " +  nf(robotsVision[i].centroidG.y,0,2) + " " + nf(robotsVision[i].angle,0,2) + " ";
     }
-    s.write("\n\0");
+    msg += "\n\0";
+    s.write(msg);
     //------
 
     frame_request = false;

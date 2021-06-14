@@ -1,20 +1,30 @@
-class Position{
+class Positions{
   
-  float robot_pos[][];
-  float x, y;
+  Point ball_pos;
+  Point robots_pos[];
+  float robots_angle[];
   
-  Position(){
-    this.x = this.y = 0.0;
+  Positions(int number_of_robots){
+    robots_pos   = new Point[number_of_robots];
+    robots_angle = new float[number_of_robots];
   }
-  void update_robot(int idx, float x, float y, float a){
-     println("Updating robot " + idx + " " + x + " " + y + " " + a);
-    robot_pos[idx][0]=x;
-    robot_pos[idx][1]=y;
-    robot_pos[idx][2]=a; 
+  void update_robot(int idx, Point position, float angle){
+    robots_pos[idx] = position;
+    robots_angle[idx] = angle;
+    //println("Updating robot " + idx + " " + robots_pos[idx].x + " " + robots_pos[idx].y + " " + robots_angle[idx]);
   }
-  void setBallPosition(float x, float y){
-    println("Updating ball " + x + " " + y );
-    this.x = x;
-    this.y = y;
+  void update_ball(Point position){
+    ball_pos = position;
+    //println("Updating ball " + ball_pos.x + " " + ball_pos.y);
+  }
+  void _print(){
+    print("Ball position: ");
+    ball_pos._print();
+    for(int i = 0; i < robots_pos.length; ++i){
+      println("Robot " + i + ": ");
+      print("position: ");
+      robots_pos[i]._print();
+      println("angle: " + robots_angle[i]);
+    }
   }
 };
