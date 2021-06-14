@@ -34,19 +34,19 @@ class Vision
     // Function to find the pixels that have the color specified
     PImage detectColor(PImage mImage,color searchColor)
     {
-    mImage.loadPixels();
-    this.opencvC.loadImage(mImage); //,mImage.width, mImage.height);
-    this.opencvC.useColor(HSB);
-    this.opencvC.setGray(this.opencvC.getH().clone());
-    int hue = int(map(hue(searchColor), 0, 255, 0, 180));
-    this.opencvC.inRange(hue-1, hue+1);
-    this.opencvC.dilate();
-    this.opencvC.dilate();
-    this.opencvC.erode();this.opencvC.erode();this.opencvC.erode();
-    this.opencvC.invert();
-    this.opencvC.erode();this.opencvC.erode();this.opencvC.erode();this.opencvC.erode();
-    this.opencvC.invert();
-    return(this.opencvC.getSnapshot());  //<>//
+        mImage.loadPixels();
+        this.opencvC.loadImage(mImage); //,mImage.width, mImage.height);
+        this.opencvC.useColor(HSB);
+        this.opencvC.setGray(this.opencvC.getH().clone());
+        int hue = int(map(hue(searchColor), 0, 255, 0, 180));
+        this.opencvC.inRange(hue-1, hue+1);
+        this.opencvC.dilate();
+        this.opencvC.dilate();
+        this.opencvC.erode();this.opencvC.erode();this.opencvC.erode();
+        this.opencvC.invert();
+        this.opencvC.erode();this.opencvC.erode();this.opencvC.erode();this.opencvC.erode();
+        this.opencvC.invert();
+        return(this.opencvC.getSnapshot());  //<>//
     }
     
     // Function to find the instersection of pixels between two images
@@ -58,21 +58,20 @@ class Vision
         temp.loadPixels();
         for (int loc=0; loc<temp.pixels.length; loc++)
         {
-                int pixelColor1 = im1.pixels[loc];
-                int pixelColor2 = im2.pixels[loc];
-                colorMode(RGB);
-                if ((pixelColor1==color(255))&&(pixelColor2==color(255)))
-                {
+            int pixelColor1 = im1.pixels[loc];
+            int pixelColor2 = im2.pixels[loc];
+            colorMode(RGB);
+            if ((pixelColor1==color(255))&&(pixelColor2==color(255)))
+            {
                 temp.pixels[loc]=color(255);
-                }
-                else
-                { 
+            }
+            else
+            { 
                 temp.pixels[loc]=color(0);
-                
-                }
-                }
-            temp.updatePixels();
-            return(temp);
+            }
+        }
+        temp.updatePixels();
+        return(temp);
     }
 
     // Computes the centroid as a medium point from other coordinates
@@ -115,7 +114,7 @@ class Vision
 
 
     void findCircles(PImage imgG, boolean zona)
-    {
+{
         PShape tempShape;
         ArrayList<Contour> contours;
         int count=0;
@@ -128,91 +127,96 @@ class Vision
         contours = this.opencvC.findContours();
         for (Contour contour : contours)
         {
-        tempShape = createShape();
-        tempShape.beginShape();
-        for (PVector point : contour.getPolygonApproximation().getPoints())
-        {
-            tempShape.vertex(point.x, point.y);
-        }
-        tempShape.endShape(CLOSE);
-        if (count<6){
-        shapesArray[count]=tempShape;
-        centroidsArray[count] = computeCentroid(shapesArray[count]);
-        count=count+1; 
-        }
-        //println(count);
+            tempShape = createShape();
+            tempShape.beginShape();
+            for (PVector point : contour.getPolygonApproximation().getPoints())
+            {
+                tempShape.vertex(point.x, point.y);
+            }
+            tempShape.endShape(CLOSE);
+            //if (count<6){
+            shapesArray[count]=tempShape;
+            centroidsArray[count] = computeCentroid(shapesArray[count]);
+            count=count+1; 
+            //}
+            //println(count);
         }
         if (count == 6)
         {
-        int cta=0;
-        for (int k=0;k<5;k++)
-        {
-            for (int m=k+1;m<6;m++)
+          int cta=0;
+          for (int k=0;k<5;k++)
+          {
+              for (int m=k+1;m<6;m++)
+              {
+                  if (compareShapes(centroidsArray[k],centroidsArray[m])==true)
+                  {
+                    vertex3[cta] = centroidsArray[k];
+                    cta=cta+1;
+                  }
+              }
+          }
+          if (cta==3)
+          {
+            // Is the common vertex 1?
+            PVector  u = new PVector(vertex3[0].x,vertex3[0].y);
+            u.sub(vertex3[1]);
+            PVector  v = new PVector(vertex3[2].x,vertex3[2].y);
+            v.sub(vertex3[1]);
+            float pp = u.dot(v)/(u.mag()*v.mag());
+            // A right angle is considered between 85 deg (1.48 rad) and 95 deg (1.65 rad)
+            if ((pp<cos(1.48))&&(pp>cos(1.65)))  
             {
-                if (compareShapes(centroidsArray[k],centroidsArray[m])==true)
-                {
-                vertex3[cta] = centroidsArray[k];
-                cta=cta+1;
-                }
+                u = PVector.sub(vertex3[0],vertex3[2]);
+                u.mult(0.5);
+                u.add(vertex3[2]);
+                tempVe = u;
+                this.angle=PVector.sub(vertex3[1],u).heading()*180/PI;       
             }
-        }
-        // Is the common vertex 1?
-        PVector  u = new PVector(vertex3[0].x,vertex3[0].y);
-        u.sub(vertex3[1]);
-        PVector  v = new PVector(vertex3[2].x,vertex3[2].y);
-        v.sub(vertex3[1]);
-        float pp = u.dot(v)/(u.mag()*v.mag());
-        // A right angle is considered between 85 deg (1.48 rad) and 95 deg (1.65 rad)
-        if ((pp<cos(1.48))&&(pp>cos(1.65)))  
-        {
-            u = PVector.sub(vertex3[0],vertex3[2]);
-            u.mult(0.5);
-            u.add(vertex3[2]);
-            tempVe = u;
-            this.angle=PVector.sub(vertex3[1],u).heading()*180/PI;       
-        }
-        else
-        {
-            // Is the common vertex 2?
-            u = new PVector(vertex3[1].x,vertex3[1].y);
-            u.sub(vertex3[2]);
-            v = new PVector(vertex3[0].x,vertex3[0].y);
-            v.sub(vertex3[2]);
-            pp = u.dot(v)/(u.mag()*v.mag());
-            // A right angle is considered between 80 and 90 deg (80 deg = 1.4 rad)
-            if ((pp<cos(1.48))&&(pp>cos(1.65)))  // If the right angle is between 1 and 2
-            {
-            u = PVector.sub(vertex3[1],vertex3[0]);
-            u.mult(0.5);
-            u.add(vertex3[0]);
-            tempVe = u;
-            this.angle=PVector.sub(vertex3[2],u).heading()*180/PI;
-            }      
             else
             {
-            // The common vertex is 0
-            u = PVector.sub(vertex3[1],vertex3[2]);
-            u.mult(0.5);
-            u.add(vertex3[2]);
-            tempVe = u; 
-            this.angle=PVector.sub(vertex3[0],u).heading()*180/PI;
+                // Is the common vertex 2?
+                u = new PVector(vertex3[1].x,vertex3[1].y);
+                u.sub(vertex3[2]);
+                v = new PVector(vertex3[0].x,vertex3[0].y);
+                v.sub(vertex3[2]);
+                pp = u.dot(v)/(u.mag()*v.mag());
+                // A right angle is considered between 80 and 90 deg (80 deg = 1.4 rad)
+                if ((pp<cos(1.48))&&(pp>cos(1.65)))  // If the right angle is between 1 and 2
+                {
+                    u = PVector.sub(vertex3[1],vertex3[0]);
+                    u.mult(0.5);
+                    u.add(vertex3[0]);
+                    tempVe = u;
+                    this.angle=PVector.sub(vertex3[2],u).heading()*180/PI;
+                }      
+                else
+                {
+                    // The common vertex is 0
+                    u = PVector.sub(vertex3[1],vertex3[2]);
+                    u.mult(0.5);
+                    u.add(vertex3[2]);
+                    tempVe = u; 
+                    this.angle=PVector.sub(vertex3[0],u).heading()*180/PI;
+                }
+            }
+            this.angle=180 - this.angle-45+360; 
+            this.angle = this.angle%360;
+            //if (this.angle<0)
+            //{
+            //    this.angle = this.angle+360;
+            //}
+            if (zona == true)
+            {
+                this.centroidG.x = this.centroidG.x-(2*DOISize)+tempVe.x;
+                this.centroidG.y = this.centroidG.y-(2*DOISize)+tempVe.y;
+            }
+            else
+            {
+                this.centroidG = tempVe;
             }
         }
-        this.angle=180 - this.angle-45; 
-        if (this.angle<0){
-            this.angle = this.angle+360;
-        }
-        if (zona == true)
-        {
-            this.centroidG.x = this.centroidG.x-(2*DOISize)+tempVe.x;
-            this.centroidG.y = this.centroidG.y-(2*DOISize)+tempVe.y;
-        }
-        else
-        {
-            this.centroidG = tempVe;
-        }
-        }
     }
+}
 
     void findBall(PImage pImg, boolean zona)
     {
