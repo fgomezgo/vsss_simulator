@@ -123,7 +123,14 @@ void draw()
       text("x: " + nf(ballVision.centroidG.x,0,2),ballVision.centroidG.x+offset,ballVision.centroidG.y);
       text("y: " + nf(ballVision.centroidG.y,0,2),ballVision.centroidG.x+offset,ballVision.centroidG.y+15);
     }
-
+    
+    //Broadcast
+    s.write("s "+ nf(ballVision.centroidG.x,0,2) + " " + nf(ballVision.centroidG.y,0,2) + " ");
+    for(int i = 0; i < robotsVision.length; ++i){
+      s.write(nf(robotsVision[i].centroidG.x,0,2) + " " +  nf(robotsVision[i].centroidG.y,0,2) + " " + nf(robotsVision[i].angle,0,2) + " ");
+    }
+    s.write("\n\0");
+    //------
 
     frame_request = false;
   }
