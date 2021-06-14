@@ -108,18 +108,18 @@ void main(){
     vector <Robot>  robots(number_of_robots);
     vector <pair<float, float>> forces(number_of_robots);
 
-    position[0].Set(-3.5f, 2.7f);
-    angle[0] = 0.f;
-    position[1].Set(0.8f, 0.5f);
+    position[0].Set(-3.5f, 0.0f);
+    angle[0] = (float)M_PI/2.f;
+    position[1].Set(-1.87f, 1.625f);
     angle[1] = 0.f;
-    position[2].Set(-0.8f, -0.5f);
+    position[2].Set(-1.87f, -1.625f);
     angle[2] = 0.f;
-    position[3].Set(0.8f, -0.5f);
-    angle[3] = 0.f;
-    position[4].Set(1.5f, 0.5f);
-    angle[4] = 0.f;
-    position[5].Set(-1.5f, 0.5f);
-    angle[5] = 0.f;
+    position[3].Set(3.5f, 0.0f);
+    angle[3] = (float)M_PI/2.f;
+    position[4].Set(1.87f, 1.625f);
+    angle[4] = (float)M_PI;
+    position[5].Set(1.87f, -1.625f);
+    angle[5] = (float)M_PI;
 
     for(int i = 0; i < robots.size(); ++i){
         robots[i] = Robot(position[i], angle[i], side_length, density, friction, restitution, 
