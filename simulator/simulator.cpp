@@ -237,7 +237,7 @@ void main(){
                     //Limit max torque
                     L = min(max(L, -max_motor_torque), max_motor_torque);
                     R = min(max(R, -max_motor_torque), max_motor_torque);
-                    if(i == 0){
+                    if(i == 5){
                         printf("[diff] wl: %.2f wr: %.2f\n", diff_w_l, diff_w_r);
                         printf("[diff] L: %.2f R: %.2f\n", L, R);
                         printf("linear velocity: %.2f %.2f\n", linear_velocity.x, linear_velocity.y);
