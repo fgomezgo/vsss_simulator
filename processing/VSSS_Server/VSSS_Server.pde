@@ -9,6 +9,7 @@ Box2DTCPHandler handler;
 
 //TCP communication with processing clients
 Server s;
+Server s_c;
 Client c1;
 Client c2;
 String input;
@@ -114,7 +115,13 @@ void draw()
         text("y: " + nf(robotsVision[i].centroidG.y,0,2),robotsVision[i].centroidG.x+offset,robotsVision[i].centroidG.y+15);
         text("a: " + nf(robotsVision[i].angle,0,2),robotsVision[i].centroidG.x+offset,robotsVision[i].centroidG.y+30);
         line(robotsVision[i].centroidG.x,robotsVision[i].centroidG.y,robotsVision[i].centroidG.x+(cos(radians(robotsVision[i].angle))*35),robotsVision[i].centroidG.y-(sin(radians(robotsVision[i].angle))*35));
-      }
+        //Sending data to client
+      //Sending Robot Position and direction.
+      
+     
+      
+      
+    }
       
       offset = 30;
       if(ballVision.centroidG.x>width/2){
@@ -122,9 +129,16 @@ void draw()
       }
       text("x: " + nf(ballVision.centroidG.x,0,2),ballVision.centroidG.x+offset,ballVision.centroidG.y);
       text("y: " + nf(ballVision.centroidG.y,0,2),ballVision.centroidG.x+offset,ballVision.centroidG.y+15);
+      
     }
-
-
+    
+    //Broadcast
+    for(int i = 0; i < robotsVision.length; ++i){
+    s.write("r "+ i + " " + nf(robotsVision[i].centroidG.x,0,2) + " " +  nf(robotsVision[i].centroidG.y,0,2)+ nf(robotsVision[i].angle,0,2)+"\n");
+    }
+    s.write("b "+ nf(ballVision.centroidG.x,0,2) + " " + nf(ballVision.centroidG.y,0,2)+"\n\0");
+    //------
+    
     frame_request = false;
   }
 }
@@ -163,6 +177,8 @@ void ClientsTCP(){
         println("Left  velocity: " + model.left_velocity);
         println("Right velocity: " + model.right_velocity);
       }
+      
+
     }
     delay(5);
   }
