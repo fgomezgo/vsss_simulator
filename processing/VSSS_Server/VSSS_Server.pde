@@ -65,7 +65,8 @@ void setup()
   //Robot description
   handler.request_robot_description();
   //Thread that handles the communication with clients
-  thread("ClientsTCP");
+  s = new Server(this, 12345); // Start a simple server on a port
+  //thread("ClientsTCP");
   // Computer Vision
   robotsVision = new Vision[robots.length];
   for(int i = 0; i < robotsVision.length; ++i){
@@ -123,17 +124,9 @@ void draw()
       text("x: " + nf(ballVision.centroidG.x,0,2),ballVision.centroidG.x+offset,ballVision.centroidG.y);
       text("y: " + nf(ballVision.centroidG.y,0,2),ballVision.centroidG.x+offset,ballVision.centroidG.y+15);
     }
-    
-    //Broadcast
-    msg = "s "+ nf(ballVision.centroidG.x,0,2) + " " + nf(ballVision.centroidG.y,0,2) + " ";
-    for(int i = 0; i < robotsVision.length; ++i){
-      msg += nf(robotsVision[i].centroidG.x,0,2) + " " +  nf(robotsVision[i].centroidG.y,0,2) + " " + nf(robotsVision[i].angle,0,2) + " ";
-    }
-    msg += "\n\0";
-    s.write(msg);
-    //------
 
     frame_request = false;
+    ClientsTCP();    
   }
 }
 
@@ -147,10 +140,8 @@ void keyPressed(){
 }
 
 void ClientsTCP(){
-  s = new Server(this, 12345); // Start a simple server on a port
-  
   //Recieve data from clients
-  while(true){
+  //while(true){
     c1 = s.available();
     if (c1 != null) {
       println("Recieving data from client");
@@ -172,6 +163,15 @@ void ClientsTCP(){
         println("Right velocity: " + model.right_velocity);
       }
     }
-    delay(5);
-  }
+    //Broadcast
+    msg = "s "+ nf(ballVision.centroidG.x,0,2) + " " + nf(ballVision.centroidG.y,0,2) + " ";
+    for(int i = 0; i < robotsVision.length; ++i){
+      msg += nf(robotsVision[i].centroidG.x,0,2) + " " +  nf(robotsVision[i].centroidG.y,0,2) + " " + nf(robotsVision[i].angle,0,2) + " ";
+    }
+    msg += "\n\0";
+    s.write(msg);
+    //------
+    
+    delay(50);
+  //}
 }

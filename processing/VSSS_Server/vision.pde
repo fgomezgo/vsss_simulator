@@ -46,7 +46,7 @@ class Vision
         this.opencvC.invert();
         this.opencvC.erode();this.opencvC.erode();this.opencvC.erode();this.opencvC.erode();
         this.opencvC.invert();
-        return(this.opencvC.getSnapshot());  //<>//
+        return(this.opencvC.getSnapshot());  //<>// //<>//
     }
     
     // Function to find the instersection of pixels between two images
@@ -134,11 +134,11 @@ class Vision
                 tempShape.vertex(point.x, point.y);
             }
             tempShape.endShape(CLOSE);
-            //if (count<6){
+            if (count<6){
             shapesArray[count]=tempShape;
             centroidsArray[count] = computeCentroid(shapesArray[count]);
             count=count+1; 
-            //}
+            }
             //println(count);
         }
         if (count == 6)

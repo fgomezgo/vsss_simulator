@@ -62,7 +62,8 @@ void fieldTCP(){
     input = c1.readString();
     input = input.substring(0, input.indexOf("\n"));
     data = float(split(input, ' '));
-    println(data);
+    println(input);
+    //println(data);
     status.update_ball(new Point(data[1], data[2]));
     println(status.robots_pos.length);
     for(int i = 0; i < number_of_robots; ++i){
