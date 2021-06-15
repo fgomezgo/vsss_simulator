@@ -46,7 +46,7 @@ int rate         = 1; // The rate at which the coordinates are computed
 Vision[] robotsVision;
 Vision   ballVision;
 
-boolean paused = true;
+boolean paused = false;
 boolean frame_request = true;
 
 void setup() 

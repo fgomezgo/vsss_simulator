@@ -143,7 +143,7 @@ void main(){
     vector <float> sum_w_r(number_of_robots);
     float max_acceleration = 3.0f; //3 m/s^2
     float robots_mass = robots[0].get_body_ptr()->GetMass();
-    float max_motor_torque = robots_mass * max_acceleration / 2.0f * 20.0f;
+    float max_motor_torque = robots_mass * max_acceleration / 2.0f * 50.0f;
 
     printf("robot mass: %.2f\n", robots_mass);
     printf("max motor torque: %.2f\n", max_motor_torque);
@@ -234,8 +234,10 @@ void main(){
                     float L = Kp * diff_w_l + Ki * sum_w_l[i];
                     float R = Kp * diff_w_r + Ki * sum_w_r[i];
                     //Limit max torque
-                    L = min(max(L, -max_motor_torque), max_motor_torque);
-                    R = min(max(R, -max_motor_torque), max_motor_torque);
+                    //L = min(max(L, -max_motor_torque), max_motor_torque);
+                    //R = min(max(R, -max_motor_torque), max_motor_torque);
+                    printf("L: %.2f R: %.2f\n", L, R);
+                    /*
                     if(i == 5){
                         printf("[diff] wl: %.2f wr: %.2f\n", diff_w_l, diff_w_r);
                         printf("[diff] L: %.2f R: %.2f\n", L, R);
@@ -255,6 +257,7 @@ void main(){
                     //printf("angle: %.2f\n", robotAngle);
                     //printf("orientation: %.2f %.2f\n", robotOrientation.x, robotOrientation.y);
                     //printf("longitudinal velocity: %.2f %.2f\n", longitudinal_velocity.x, longitudinal_velocity.y);
+                    */
 
 
                     b2Vec2 leftMotorPos  = robotBody->GetWorldPoint(robots[i].get_left_motor_position());  //Get left  motor's position in world coord
@@ -332,21 +335,21 @@ void main(){
                 server.send_message(msg);
                 printf("Bytes sent: %d\n", server.get_send_result());
             } else if (data[0] == 'a') {
-                printf("Recieving forces definition...\n");
+                //printf("Recieving forces definition...\n");
                 memcpy(aux, &data[2], strlen(data)-2);
                 float force_m1;
                 float force_m2;
                 int idx;
-                printf("aux: %s\n", aux);
+                //printf("aux: %s\n", aux);
                 sscanf_s(aux, "%f %f %d", &force_m1, &force_m2, &idx);
-                printf("\nForce 1: %.2f Force 2: %.2f idx: %d\n\n", force_m1, force_m2, idx);
+                printf("\nForce 1: %.2f Force 2: %.2f idx: %d\n", force_m1, force_m2, idx);
                 forces[idx] = {force_m1, force_m2};
                 msg[0] = 'K';
                 msg[1] = '\n';
                 msg[2] = '\0';
-                printf(msg);
+                //printf(msg);
                 server.send_message(msg);
-                printf("Bytes sent: %d\n", server.get_send_result());
+                //printf("Bytes sent: %d\n", server.get_send_result());
             }
         }
         else if (server.get_send_result() == 0)
