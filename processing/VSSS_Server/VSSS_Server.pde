@@ -172,6 +172,6 @@ void ClientsTCP(){
     s.write(msg);
     //------
     
-    delay(100);
+    delay(50);
   //}
 }
