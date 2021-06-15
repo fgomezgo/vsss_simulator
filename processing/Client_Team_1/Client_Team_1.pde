@@ -13,6 +13,7 @@ float Va=1.0;
 float idx=0;
 int aux=0;
 
+Point gk_velocity = new Point();
 
 String stream[];
 Positions status = new Positions(number_of_robots);
@@ -30,28 +31,43 @@ void setup()
   r2 = new Robot_control(1);
   r3 = new Robot_control(2);
 
-  r1.set_vel_robot(-3,1); 
-  r2.set_vel_robot(-1,0);
-  r3.set_vel_robot(0,12);
+  //r1.set_vel_robot(-3,1); 
+  //r2.set_vel_robot(-1,0);
+  //r3.set_vel_robot(0,12);
   
   thread("fieldTCP");
 
 }
 
+void predictImpact(){
+  float threshold = 10;
+  if(status.ball_old_pos.y < status.robots_pos[0].y + threshold){
+    if(  status.robots_pos[0].y > 355){
+      gk_velocity.x = 2.0;
+    }else{
+      gk_velocity.x = 0.0;
+    }
+    
+  }else{
+    if(  status.robots_pos[0].y < 655){
+      gk_velocity.x = -2.0;
+    }else{
+      gk_velocity.x = 0.0;
+    }
+  }
+  
+  
+}
+
 void draw() 
 {
-  //if (c1.available() > 0) {
-  //  input = c1.readString();
-  //  input = input.substring(0, input.indexOf("\n\0")); // Only up to the newline
-  //  println(input);
-  //  data = float(split(input, ' ')); // Split values into an array
-  //  //if (data[0] == 's'){
-  //  //  pos.update_ball(data[1],data[2]);
-  //  //  //for(int i = 0; i < 6; i++){
-  //  //  //  pos.update_robot(data[1], data[2], data[3], data[4]);
-  //  //  //}
-  //  //}
-  //}
+  //float m = (status.ball_old_pos.y - status.ball_pos.y) / (status.ball_old_pos.x - status.ball_pos.x);
+  predictImpact();
+  println(status.robots_pos[0].y + " vel: " + gk_velocity.x);
+  
+  r1.set_vel_robot( gk_velocity.x, 0);
+  
+  delay(500);
 }
 
 
@@ -62,9 +78,9 @@ void fieldTCP(){
     input = c1.readString();
     input = input.substring(0, input.indexOf("\n"));
     data = float(split(input, ' '));
-    println(data);
+    //println(data);
     status.update_ball(new Point(data[1], data[2]));
-    println(status.robots_pos.length);
+    //println(status.robots_pos.length);
     for(int i = 0; i < number_of_robots; ++i){
       status.update_robot(i, new Point(data[i*3 + 3], data[i*3 + 4]), data[i*3 + 5]);
     }

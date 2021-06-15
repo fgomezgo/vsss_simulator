@@ -172,6 +172,6 @@ void ClientsTCP(){
         println("Right velocity: " + model.right_velocity);
       }
     }
-    delay(5);
+    delay(100);
   }
 }

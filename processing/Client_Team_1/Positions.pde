@@ -1,12 +1,15 @@
 class Positions{
   
   Point ball_pos;
+  Point ball_old_pos;
   Point robots_pos[];
   float robots_angle[];
   
   Positions(int number_of_robots){
-    robots_pos   = new Point[number_of_robots];
-    robots_angle = new float[number_of_robots];
+    ball_pos      = new Point();
+    ball_old_pos  = new Point();
+    robots_pos    = new Point[number_of_robots];
+    robots_angle  = new float[number_of_robots];
   }
   void update_robot(int idx, Point position, float angle){
     robots_pos[idx] = position;
@@ -14,7 +17,8 @@ class Positions{
     //println("Updating robot " + idx + " " + robots_pos[idx].x + " " + robots_pos[idx].y + " " + robots_angle[idx]);
   }
   void update_ball(Point position){
-    ball_pos = position;
+    ball_old_pos   = ball_pos;
+    ball_pos       = position;
     //println("Updating ball " + ball_pos.x + " " + ball_pos.y);
   }
   void _print(){
