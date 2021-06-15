@@ -207,12 +207,11 @@ void main(){
 
                     //Vector projection
                     b2Vec2 robotOrientation = b2Vec2(cos(robotAngle), sin(robotAngle));
-                    float scalar = (robotOrientation.x * linear_velocity.x + robotOrientation.y * linear_velocity.y) / robotOrientation.LengthSquared();
+                    float scalar = robotOrientation.x * linear_velocity.x + robotOrientation.y * linear_velocity.y;
                     b2Vec2 longitudinal_velocity = scalar * robotOrientation;
-                    float long_vel_magn = longitudinal_velocity.Length();
 
-                    float w_l  = (2.0f * long_vel_magn - angular_velocity * length_between_wheels) / (2.0f * wheel_radius); 
-                    float w_r  = (2.0f * long_vel_magn + angular_velocity * length_between_wheels) / (2.0f * wheel_radius); 
+                    float w_l  = (2.0f * scalar - angular_velocity * length_between_wheels) / (2.0f * wheel_radius); 
+                    float w_r  = (2.0f * scalar + angular_velocity * length_between_wheels) / (2.0f * wheel_radius); 
 
                     //Desired velocities
                     float w_l_d  = (2.0f * forces[i].first - forces[i].second * length_between_wheels) / (2.0f * wheel_radius); 
@@ -240,12 +239,14 @@ void main(){
                     if(i == 5){
                         printf("[diff] wl: %.2f wr: %.2f\n", diff_w_l, diff_w_r);
                         printf("[diff] L: %.2f R: %.2f\n", L, R);
+                        printf("desired linear velocity: %.2f\n", forces[i].first);
+                        printf("desired angular velocity: %.2f\n", forces[i].second);
                         printf("linear velocity: %.2f %.2f\n", linear_velocity.x, linear_velocity.y);
                         printf("angular velocity: %.2f\n", angular_velocity);
                         printf("angle: %.2f\n", robotAngle);
                         printf("orientation: %.2f %.2f\n", robotOrientation.x, robotOrientation.y);
                         printf("longitudinal velocity: %.2f %.2f\n", longitudinal_velocity.x, longitudinal_velocity.y);
-                        printf("long vel magnitud: %.4f\n", long_vel_magn);
+                        printf("long vel magnitud: %.4f\n", scalar);
                     }
 
                     //printf("[current] wl: %.2f wr: %.2f\n", w_l, w_r);
